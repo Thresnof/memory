@@ -135,11 +135,12 @@ h2 {
     font-size: 0.9rem;
 }
 .link-box span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 70%;
+    overflow-wrap: break-word;
+    word-break: break-all;
+    max-width: 80%;
     color: var(--color-secondary);
+    text-align: left;
+    margin-right: 10px;
 }
 .link-box button {
     background: var(--color-secondary);
