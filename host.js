@@ -61,7 +61,9 @@ function initHost() {
         copyBtn.innerText = 'Skopiowano!';
         setTimeout(() => { copyBtn.innerText = 'Kopiuj'; }, 2000);
     };
-    socket.emit('create_room', { code: sessionCode });
+    socket.on('connect', () => {
+        socket.emit('create_room', { code: sessionCode });
+    });
     socket.on('player_joined', (data) => {
         players[data.playerId] = { name: data.name, score: 0, finished: false };
         updateLobbyUI();
