@@ -24,8 +24,3 @@ Następnie otwórz przeglądarkę i wejdź na swój lokalny adres sieciowy:
  `http://localhost:3000` (aby grać w pojedynkę) 
 lub 
  `http://TWOJE_IP:3000` (np. `http://192.168.0.103:3000`, jeśli chcesz, aby inni dołączali z telefonów na domowym Wi-Fi).
-
-## 🛠️ Technologie
-- **Frontend:** Vanilla JavaScript, HTML5, CSS3 
-- **Backend:** Node.js, Express.js
-- **Komunikacja Real-time:** Socket.IO
