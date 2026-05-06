@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Multiplayer - Host</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+    <div class="credits">zrobione przez X, Y i Z</div>
+    <div class="glass-container main-host-card">
+        <header>
+            <h1>Memory Game</h1>
+            <p class="subtitle">Panel Hosta</p>
+        </header>
+        <main>
+            <div id="lobby-screen" class="screen active">
+                <div class="connection-info">
+                    <p>Zaproś graczy za pomocą tego linku:</p>
+                    <div class="link-box">
+                        <span id="game-link">Ładowanie...</span>
+                        <button id="copy-btn">Kopiuj</button>
+                    </div>
+                    <p class="small-info">Lub kod sesji: <strong id="session-code">...</strong></p>
+                </div>
+                <div class="players-section">
+                    <h2>Oczekujący gracze (<span id="player-count">0</span>)</h2>
+                    <ul id="players-list" class="players-list">
+                    </ul>
+                </div>
+                <button id="start-game-btn" class="primary-btn" disabled>Rozpocznij Grę</button>
+            </div>
+            <div id="ranking-screen" class="screen">
+                <h2>Ranking na żywo</h2>
+                <ul id="ranking-list" class="ranking-list">
+                </ul>
+                <button id="end-game-btn" class="primary-btn" style="margin-top: 20px; background-color: var(--color-error);">Zakończ Grę dla wszystkich</button>
+            </div>
+        </main>
+    </div>
+    <script src="host.js"></script>
+</body>
+</html>

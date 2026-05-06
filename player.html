@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Multiplayer - Gracz</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+    <div class="glass-container main-player-card">
+        <header>
+            <h1 id="player-header-title">Memory Game</h1>
+            <div id="player-info" style="display: none;">
+                <span id="display-name" class="player-name"></span>
+                <span class="player-score">Punkty: <strong id="display-score">0</strong></span>
+            </div>
+        </header>
+        <main>
+            <div id="login-screen" class="screen active">
+                <h2>Dołącz do gry</h2>
+                <div class="input-group">
+                    <label for="player-name-input">Twoje imię:</label>
+                    <input type="text" id="player-name-input" placeholder="Wpisz swoje imię..." autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <label for="session-code-input">Kod sesji:</label>
+                    <input type="text" id="session-code-input" placeholder="Wpisz kod od Hosta..." autocomplete="off">
+                </div>
+                <button id="join-btn" class="primary-btn">Dołącz</button>
+                <p id="login-error" class="error-message"></p>
+            </div>
+            <div id="waiting-screen" class="screen">
+                <div class="loader-container">
+                    <div class="spinner"></div>
+                    <h2>Oczekiwanie na start gry...</h2>
+                    <p>Zaraz połączymy pary!</p>
+                </div>
+            </div>
+            <div id="game-screen" class="screen">
+                <div class="game-header">
+                    <div class="timer">Czas: <span id="time-display">0:00</span></div>
+                    <button id="hint-btn" class="hint-btn hidden" title="Pokaż podpowiedź">💡</button>
+                </div>
+                <div id="memory-grid" class="memory-grid">
+                </div>
+            </div>
+            <div id="end-screen" class="screen">
+                <h2>Koniec gry!</h2>
+                <p>Twój wynik końcowy: <strong id="final-score">0</strong></p>
+                <p>Zerknij na ekran Hosta, aby zobaczyć ostateczny ranking.</p>
+            </div>
+        </main>
+    </div>
+    <script src="player.js"></script>
+</body>
+</html>
