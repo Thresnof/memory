@@ -1,3 +1,59 @@
+// --- YOUTUBE MUSIC LOGIC ---
+let ytPlayer;
+let isYtReady = false;
+let fadeInterval;
+
+window.onYouTubeIframeAPIReady = function() {
+    ytPlayer = new YT.Player('yt-player-container', {
+        height: '10',
+        width: '10',
+        videoId: 'jfKfPfyJRdk',
+        playerVars: {
+            'autoplay': 0,
+            'loop': 1,
+            'playlist': 'jfKfPfyJRdk',
+            'controls': 0
+        },
+        events: {
+            'onReady': () => { isYtReady = true; ytPlayer.setVolume(0); }
+        }
+    });
+};
+
+function fadeMusicIn() {
+    if (!isYtReady || !ytPlayer) return;
+    clearInterval(fadeInterval);
+    ytPlayer.setVolume(0);
+    ytPlayer.playVideo();
+    let vol = 0;
+    fadeInterval = setInterval(() => {
+        vol += 2;
+        if (vol >= 100) {
+            ytPlayer.setVolume(100);
+            clearInterval(fadeInterval);
+        } else {
+            ytPlayer.setVolume(vol);
+        }
+    }, 100);
+}
+
+function fadeMusicOut() {
+    if (!isYtReady || !ytPlayer) return;
+    clearInterval(fadeInterval);
+    let vol = ytPlayer.getVolume();
+    if (vol === null || vol === undefined) vol = 100;
+    fadeInterval = setInterval(() => {
+        vol -= 2;
+        if (vol <= 0) {
+            ytPlayer.setVolume(0);
+            ytPlayer.pauseVideo();
+            clearInterval(fadeInterval);
+        } else {
+            ytPlayer.setVolume(vol);
+        }
+    }, 100);
+}
+
 const generateSessionCode = () => {
     return Math.random().toString(36).substring(2, 7).toUpperCase();
 };
@@ -182,12 +238,7 @@ function generateBoard(numPairs) {
 startGameBtn.addEventListener('click', () => {
     lobbyScreen.classList.remove('active');
     rankingScreen.classList.add('active');
-    
-    const ytContainer = document.getElementById('yt-player-container');
-    if (ytContainer) {
-        ytContainer.innerHTML = '<iframe width="10" height="10" src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&loop=1&playlist=jfKfPfyJRdk" frameborder="0" allow="autoplay"></iframe>';
-    }
-
+    fadeMusicIn();
     Object.keys(players).forEach(playerId => {
         const board = generateBoard(8);
         socket.emit('send_board', { code: sessionCode, targetPlayerId: playerId, board: board });
@@ -196,10 +247,7 @@ startGameBtn.addEventListener('click', () => {
 });
 endGameBtn.addEventListener('click', () => {
     if (confirm("Czy na pewno chcesz zakończyć grę dla wszystkich?")) {
-        const ytContainer = document.getElementById('yt-player-container');
-        if (ytContainer) {
-            ytContainer.innerHTML = '';
-        }
+        fadeMusicOut();
         socket.emit('end_game_for_all', { code: sessionCode });
         endGameBtn.disabled = true;
         endGameBtn.innerText = "Zakończono!";
