@@ -286,7 +286,7 @@ header {
 .memory-card {
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 3 / 4; /* Zmieniono z 1/1 na 3/4 aby karty były wyższe i mieściły więcej tekstu */
     cursor: pointer;
     transform-style: preserve-3d;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -306,9 +306,10 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 8px;
+    padding: 6px;
     text-align: center;
     word-break: break-word;
+    overflow: hidden; /* Zapobiega wychodzeniu tekstu poza kartę */
 }
 .card-back {
     background: #f3f4f6;
@@ -328,7 +329,8 @@ header {
     border: 1px solid var(--color-primary);
     font-weight: 500;
     color: var(--color-text);
-    font-size: 0.95rem;
+    font-size: clamp(0.55rem, 2.5vw, 0.95rem); /* Dynamiczne skalowanie czcionki */
+    line-height: 1.2;
     display: flex;
     flex-direction: column;
 }
