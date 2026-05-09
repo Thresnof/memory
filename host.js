@@ -209,6 +209,11 @@ function initHost() {
     const currentUrl = window.location.href.replace('index.html', '').replace(/\/$/, '');
     const fullLink = `${currentUrl}/player.html?code=${sessionCode}`;
     gameLinkDisplay.innerText = fullLink;
+
+    const qrContainer = document.getElementById('qr-code-container');
+    if (qrContainer) {
+        qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(fullLink)}" alt="QR Code" style="border-radius: 8px; border: 4px solid white;">`;
+    }
     copyBtn.onclick = () => {
         navigator.clipboard.writeText(fullLink);
         copyBtn.innerText = 'Skopiowano!';

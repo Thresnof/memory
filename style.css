@@ -363,21 +363,24 @@ header {
 
 .correct-answers-list {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 300px;
-    overflow-y: auto;
+    flex-direction: row;
+    gap: 15px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
     text-align: left;
     margin-top: 1rem;
-    padding-right: 5px;
+    padding-bottom: 15px;
 }
 .matched-pair-box {
     display: flex;
+    flex-direction: column;
     gap: 10px;
     background: #f9fafb;
     border: 1px solid var(--glass-border);
     border-radius: 8px;
     padding: 10px;
+    flex: 0 0 85%;
+    scroll-snap-align: center;
 }
 .matched-item {
     flex: 1;
