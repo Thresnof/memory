@@ -109,6 +109,7 @@ function renderBoard() {
         cardEl.className = 'memory-card';
         cardEl.dataset.index = index;
         cardEl.dataset.pairId = card.pairId;
+        cardEl.dataset.type = card.type;
         const isEmoji = card.content.includes('emoji');
         const innerHTML = `
             <div class="card-face card-back"></div>
@@ -156,7 +157,7 @@ function checkMatch() {
                 memoryGrid.innerHTML = '<h3 style="grid-column: 1 / -1; text-align: center; color: var(--color-primary);">Ładowanie nowych kart...</h3>';
                 socket.emit('board_finished', { code: sessionCode });
             }
-        }, 3000); 
+        }, 3000); // Czas w milisekundach (3 sekundy) na podgląd poprawnie dopasowanych kart zanim znikną z planszy
     } else {
         card1.classList.add('wrong-match');
         card2.classList.add('wrong-match');
@@ -166,7 +167,7 @@ function checkMatch() {
             card1.classList.remove('wrong-match');
             card2.classList.remove('wrong-match');
             resetBoard();
-        }, 1200); 
+        }, 1200); // Czas w milisekundach (1.2 sekundy) na podgląd błędnie dopasowanych kart przed ich ponownym zakryciem
     }
 }
 function addPoints(pts) {

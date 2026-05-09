@@ -395,3 +395,14 @@ header {
     align-items: center;
     justify-content: center;
 }
+
+/* Gradient backgrounds for card types */
+.memory-card[data-type="name"] .card-front {
+    background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+    border-color: #8ec5fc;
+}
+
+.memory-card[data-type="desc"] .card-front {
+    background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+    border-color: #d1d5db;
+}
