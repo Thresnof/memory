@@ -2,6 +2,7 @@
 let ytPlayer;
 let isYtReady = false;
 let fadeInterval;
+let isGameEnded = false;
 
 const volumeSlider = document.getElementById('volume-slider');
 const volumeIcon = document.getElementById('volume-icon');
@@ -237,9 +238,17 @@ function initHost() {
         socket.emit('send_board', { code: sessionCode, targetPlayerId: data.playerId, board: newBoard });
     });
     socket.on('player_left', (data) => {
-        delete players[data.playerId];
-        updateLobbyUI();
-        updateRankingUI();
+        if (!isGameEnded) {
+            delete players[data.playerId];
+            updateLobbyUI();
+            updateRankingUI();
+        } else if (players[data.playerId]) {
+            // Gracze nie znikają, jeśli gra się już skończyła
+            if (!players[data.playerId].name.includes('(Wyszedł)')) {
+                players[data.playerId].name += ' (Wyszedł)';
+                updateRankingUI();
+            }
+        }
     });
 }
 function updateLobbyUI() {
@@ -275,6 +284,7 @@ startGameBtn.addEventListener('click', () => {
 });
 endGameBtn.addEventListener('click', () => {
     if (confirm("Czy na pewno chcesz zakończyć grę dla wszystkich?")) {
+        isGameEnded = true;
         fadeMusicOut();
         socket.emit('end_game_for_all', { code: sessionCode });
         endGameBtn.disabled = true;
