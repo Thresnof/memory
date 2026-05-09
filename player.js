@@ -22,6 +22,7 @@ let cards = [];
 let flippedCards = [];
 let matchedPairs = 0;
 let totalPairs = 0;
+let correctlyMatchedPairs = [];
 let gameTimer;
 let secondsElapsed = 0;
 let isLocked = false;
@@ -136,6 +137,15 @@ function checkMatch() {
     if (isMatch) {
         card1.classList.add('correct-match');
         card2.classList.add('correct-match');
+        
+        const pairId = card1.dataset.pairId;
+        const matchedNameCard = cards.find(c => c.pairId == pairId && c.type === 'name');
+        const matchedDescCard = cards.find(c => c.pairId == pairId && c.type === 'desc');
+        
+        if (matchedNameCard && matchedDescCard && !correctlyMatchedPairs.find(p => p.name === matchedNameCard.content)) {
+            correctlyMatchedPairs.push({ name: matchedNameCard.content, desc: matchedDescCard.content });
+        }
+
         setTimeout(() => {
             card1.classList.add('matched');
             card2.classList.add('matched');
@@ -146,7 +156,7 @@ function checkMatch() {
                 memoryGrid.innerHTML = '<h3 style="grid-column: 1 / -1; text-align: center; color: var(--color-primary);">Ładowanie nowych kart...</h3>';
                 socket.emit('board_finished', { code: sessionCode });
             }
-        }, 500); 
+        }, 3000); 
     } else {
         card1.classList.add('wrong-match');
         card2.classList.add('wrong-match');
@@ -176,6 +186,27 @@ function endGame() {
     gameScreen.classList.remove('active');
     endScreen.classList.add('active');
     finalScoreDisplay.innerText = score;
+
+    const answersList = document.getElementById('correct-answers-list');
+    if (answersList) {
+        answersList.innerHTML = '';
+        correctlyMatchedPairs.forEach(pair => {
+            const box = document.createElement('div');
+            box.className = 'matched-pair-box';
+            
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'matched-item';
+            nameDiv.innerText = pair.name;
+            
+            const descDiv = document.createElement('div');
+            descDiv.className = 'matched-item';
+            descDiv.innerText = pair.desc;
+            
+            box.appendChild(nameDiv);
+            box.appendChild(descDiv);
+            answersList.appendChild(box);
+        });
+    }
 }
 hintBtn.addEventListener('click', () => {
     const unmatchedCards = Array.from(document.querySelectorAll('.memory-card:not(.matched)'));

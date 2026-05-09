@@ -363,3 +363,35 @@ header {
     color: var(--color-secondary);
     opacity: 0.8;
 }
+
+.correct-answers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    text-align: left;
+    margin-top: 1rem;
+    padding-right: 5px;
+}
+.matched-pair-box {
+    display: flex;
+    gap: 10px;
+    background: #f9fafb;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 10px;
+}
+.matched-item {
+    flex: 1;
+    background: white;
+    border: 1px solid var(--color-primary);
+    border-radius: 6px;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
