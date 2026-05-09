@@ -397,12 +397,20 @@ header {
 }
 
 /* Gradient backgrounds for card types */
-.memory-card[data-type="name"] .card-front {
+.memory-card[data-type="name"] .card-back {
     background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
     border-color: #8ec5fc;
 }
+.memory-card[data-type="name"] .card-back::after {
+    content: "N";
+    color: white;
+}
 
-.memory-card[data-type="desc"] .card-front {
+.memory-card[data-type="desc"] .card-back {
     background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
     border-color: #d1d5db;
+}
+.memory-card[data-type="desc"] .card-back::after {
+    content: "O";
+    color: #9ca3af;
 }

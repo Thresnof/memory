@@ -182,6 +182,12 @@ function generateBoard(numPairs) {
 startGameBtn.addEventListener('click', () => {
     lobbyScreen.classList.remove('active');
     rankingScreen.classList.add('active');
+    
+    const ytContainer = document.getElementById('yt-player-container');
+    if (ytContainer) {
+        ytContainer.innerHTML = '<iframe width="10" height="10" src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&loop=1&playlist=jfKfPfyJRdk" frameborder="0" allow="autoplay"></iframe>';
+    }
+
     Object.keys(players).forEach(playerId => {
         const board = generateBoard(8);
         socket.emit('send_board', { code: sessionCode, targetPlayerId: playerId, board: board });
@@ -190,6 +196,10 @@ startGameBtn.addEventListener('click', () => {
 });
 endGameBtn.addEventListener('click', () => {
     if (confirm("Czy na pewno chcesz zakończyć grę dla wszystkich?")) {
+        const ytContainer = document.getElementById('yt-player-container');
+        if (ytContainer) {
+            ytContainer.innerHTML = '';
+        }
         socket.emit('end_game_for_all', { code: sessionCode });
         endGameBtn.disabled = true;
         endGameBtn.innerText = "Zakończono!";
@@ -214,4 +224,4 @@ function updateRankingUI() {
         rankingList.appendChild(li);
     });
 }
-initHost(); id
+initHost();
