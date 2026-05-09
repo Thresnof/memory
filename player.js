@@ -147,17 +147,18 @@ function checkMatch() {
             correctlyMatchedPairs.push({ name: matchedNameCard.content, desc: matchedDescCard.content });
         }
 
-        setTimeout(() => {
-            card1.classList.add('matched');
-            card2.classList.add('matched');
-            matchedPairs++;
-            addPoints(10);
-            resetBoard();
-            if (matchedPairs === totalPairs) {
+        card1.classList.add('matched');
+        card2.classList.add('matched');
+        matchedPairs++;
+        addPoints(10);
+        resetBoard();
+        
+        if (matchedPairs === totalPairs) {
+            setTimeout(() => {
                 memoryGrid.innerHTML = '<h3 style="grid-column: 1 / -1; text-align: center; color: var(--color-primary);">Ładowanie nowych kart...</h3>';
                 socket.emit('board_finished', { code: sessionCode });
-            }
-        }, 3000); // Czas w milisekundach (3 sekundy) na podgląd poprawnie dopasowanych kart zanim znikną z planszy
+            }, 1000); // Czas w milisekundach (1 sekunda) opóźnienia przed załadowaniem nowej planszy
+        }
     } else {
         card1.classList.add('wrong-match');
         card2.classList.add('wrong-match');
