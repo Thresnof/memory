@@ -37,7 +37,13 @@
                 <button id="start-game-btn" class="primary-btn" disabled>Rozpocznij Grę</button>
             </div>
             <div id="ranking-screen" class="screen">
-                <h2>Ranking na żywo</h2>
+                <div class="ranking-header">
+                    <h2>Ranking na żywo</h2>
+                    <div id="volume-control" class="volume-control">
+                        <span id="volume-icon">🔊</span>
+                        <input type="range" id="volume-slider" min="0" max="100" value="100" title="Głośność muzyki">
+                    </div>
+                </div>
                 <ul id="ranking-list" class="ranking-list">
                 </ul>
                 <button id="end-game-btn" class="primary-btn" style="margin-top: 20px; background-color: var(--color-error);">Zakończ Grę dla wszystkich</button>

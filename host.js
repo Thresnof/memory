@@ -3,6 +3,15 @@ let ytPlayer;
 let isYtReady = false;
 let fadeInterval;
 
+const volumeSlider = document.getElementById('volume-slider');
+const volumeIcon = document.getElementById('volume-icon');
+
+function updateVolumeIcon(vol) {
+    if (vol === 0) volumeIcon.innerText = '🔇';
+    else if (vol < 50) volumeIcon.innerText = '🔉';
+    else volumeIcon.innerText = '🔊';
+}
+
 window.onYouTubeIframeAPIReady = function() {
     ytPlayer = new YT.Player('yt-player-container', {
         height: '10',
@@ -26,10 +35,15 @@ function fadeMusicIn() {
     ytPlayer.setVolume(0);
     ytPlayer.playVideo();
     let vol = 0;
+    const targetVol = parseInt(volumeSlider.value);
+    if (targetVol === 0) {
+        ytPlayer.setVolume(0);
+        return;
+    }
     fadeInterval = setInterval(() => {
         vol += 2;
-        if (vol >= 100) {
-            ytPlayer.setVolume(100);
+        if (vol >= targetVol) {
+            ytPlayer.setVolume(targetVol);
             clearInterval(fadeInterval);
         } else {
             ytPlayer.setVolume(vol);
@@ -41,7 +55,7 @@ function fadeMusicOut() {
     if (!isYtReady || !ytPlayer) return;
     clearInterval(fadeInterval);
     let vol = ytPlayer.getVolume();
-    if (vol === null || vol === undefined) vol = 100;
+    if (vol === null || vol === undefined) vol = parseInt(volumeSlider.value);
     fadeInterval = setInterval(() => {
         vol -= 2;
         if (vol <= 0) {
@@ -62,6 +76,15 @@ const socket = io();
 const players = {};
 const sessionCodeDisplay = document.getElementById('session-code');
 const gameLinkDisplay = document.getElementById('game-link');
+
+volumeSlider.addEventListener('input', (e) => {
+    const vol = parseInt(e.target.value);
+    if (isYtReady && ytPlayer && ytPlayer.setVolume) {
+        ytPlayer.setVolume(vol);
+    }
+    updateVolumeIcon(vol);
+    clearInterval(fadeInterval);
+});
 const copyBtn = document.getElementById('copy-btn');
 const playersList = document.getElementById('players-list');
 const playerCountDisplay = document.getElementById('player-count');

@@ -403,3 +403,32 @@ header {
     content: "O";
     color: #9ca3af;
 }
+
+/* Volume Control */
+.ranking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.ranking-header h2 {
+    margin-bottom: 0;
+}
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+}
+.volume-control input[type="range"] {
+    width: 80px;
+    cursor: pointer;
+}
+#volume-icon {
+    font-size: 1.2rem;
+    min-width: 24px;
+    text-align: center;
+}
