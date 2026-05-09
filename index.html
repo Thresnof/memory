@@ -9,15 +9,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
+    <script>
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
     <div class="background">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
     </div>
     <div class="credits">zrobione tylko przez Josepha</div>
     <div class="glass-container main-host-card">
-        <header>
-            <h1>Memory Game</h1>
-            <p class="subtitle">Panel Hosta</p>
+        <header style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div>
+                <h1>Memory Game</h1>
+                <p class="subtitle" style="margin-bottom: 0;">Panel Hosta</p>
+            </div>
+            <button id="theme-toggle" class="theme-toggle" title="Przełącz motyw">
+                <span class="icon sun">☀️</span>
+                <span class="icon moon">🌙</span>
+            </button>
         </header>
         <main>
             <div id="lobby-screen" class="screen active">

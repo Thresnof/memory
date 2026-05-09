@@ -9,16 +9,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
+    <script>
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
     <div class="background">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
     </div>
     <div class="glass-container main-player-card">
-        <header>
+        <header style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
             <h1 id="player-header-title">Memory Game</h1>
-            <div id="player-info" style="display: none;">
-                <span id="display-name" class="player-name"></span>
-                <span class="player-score">Punkty: <strong id="display-score">0</strong></span>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div id="player-info" style="display: none; align-items: center; gap: 10px;">
+                    <span id="display-name" class="player-name"></span>
+                    <span class="player-score">Punkty: <strong id="display-score">0</strong></span>
+                </div>
+                <button id="theme-toggle" class="theme-toggle" title="Przełącz motyw">
+                    <span class="icon sun">☀️</span>
+                    <span class="icon moon">🌙</span>
+                </button>
             </div>
         </header>
         <main>

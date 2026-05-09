@@ -296,8 +296,20 @@ function updateRankingUI() {
         scoreSpan.className = 'score';
         scoreSpan.innerText = `${player.score} pkt`;
         li.appendChild(nameSpan);
-        li.appendChild(scoreSpan);
         rankingList.appendChild(li);
     });
 }
 initHost();
+
+// Theme Toggle Logic
+const themeToggle = document.getElementById('theme-toggle');
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        if (document.body.classList.contains('dark-mode')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    });
+}
