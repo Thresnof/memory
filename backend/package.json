@@ -1,5 +1,5 @@
 {
-  "name": "memory-game-backend",
+  "name": "memory-backend",
   "version": "1.0.0",
   "description": "Backend dla gry Memory",
   "main": "server.js",

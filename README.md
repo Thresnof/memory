@@ -1,4 +1,4 @@
-# Memory Multiplayer
+# Memory
 
 Gra "Memory" (znajdź pary) dla wielu graczy. Aplikacja została zbudowana na **Node.js** i **Socket.IO**, pozwalając jednemu komputerowi pełnić rolę Hosta, podczas gdy pozostali gracze używają swoich telefonów jako kontrolerów i plansz.
 

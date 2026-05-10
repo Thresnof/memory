@@ -1,7 +1,7 @@
 {
-  "name": "memory-game",
+  "name": "memory",
   "version": "1.0.0",
-  "description": "Multiplayer Memory Game",
+  "description": "Multiplayer Memory",
   "main": "backend/server.js",
   "scripts": {
     "start": "node backend/server.js"

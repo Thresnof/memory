@@ -265,14 +265,24 @@ function updateLobbyUI() {
         playersList.appendChild(li);
     });
 }
+function shuffleArray(array) {
+    let currentIndex = array.length, randomIndex;
+    while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
+    return array;
+}
+
 function generateBoard(numPairs) {
-    const shuffledItems = [...dbItems].sort(() => 0.5 - Math.random()).slice(0, numPairs);
+    const shuffledItems = shuffleArray([...dbItems]).slice(0, numPairs);
     let selectedCards = [];
     shuffledItems.forEach(item => {
         selectedCards.push({ pairId: item.id, type: 'name', content: item.name });
         selectedCards.push({ pairId: item.id, type: 'desc', content: item.desc });
     });
-    return selectedCards.sort(() => 0.5 - Math.random());
+    return shuffleArray(selectedCards);
 }
 startGameBtn.addEventListener('click', () => {
     lobbyScreen.classList.remove('active');
