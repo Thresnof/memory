@@ -12,6 +12,7 @@ const displayName = document.getElementById('display-name');
 const displayScore = document.getElementById('display-score');
 const finalScoreDisplay = document.getElementById('final-score');
 const showScoreToggle = document.getElementById('show-score-toggle');
+const scoreToggleContainer = document.getElementById('score-toggle-container');
 const memoryGrid = document.getElementById('memory-grid');
 const timeDisplay = document.getElementById('time-display');
 const hintBtn = document.getElementById('hint-btn');
@@ -83,6 +84,7 @@ function showWaitingScreen() {
 function startGame(boardData) {
     waitingScreen.classList.remove('active');
     gameScreen.classList.add('active');
+    if (scoreToggleContainer) scoreToggleContainer.style.display = 'none';
     cards = boardData;
     totalPairs = cards.length / 2;
     matchedPairs = 0;
