@@ -22,6 +22,14 @@ io.on('connection', (socket) => {
     socket.on('join_room', (data, callback) => {
         const { code, name } = data;
         if (rooms[code]) {
+            const nameExists = Object.values(rooms[code].players).some(
+                p => p.name.toLowerCase() === name.toLowerCase()
+            );
+            if (nameExists) {
+                callback({ status: 'error', message: 'To imię jest już zajęte w tym pokoju!' });
+                return;
+            }
+
             socket.join(code);
             rooms[code].players[socket.id] = { name, score: 0, finished: false };
             io.to(rooms[code].hostId).emit('player_joined', {
