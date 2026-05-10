@@ -318,6 +318,7 @@ function updateRankingUI() {
             scoreSpan.innerText = `${player.score} pkt`;
         }
         li.appendChild(nameSpan);
+        li.appendChild(scoreSpan);
         rankingList.appendChild(li);
     });
 }
