@@ -229,7 +229,7 @@ h2 {
 .spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid #f3f4f6;
+    border: 3px solid var(--glass-border);
     border-top-color: var(--color-primary);
     border-radius: 50%;
     animation: spin 1s linear infinite;
@@ -266,7 +266,7 @@ header {
 }
 .player-score {
     background: var(--color-primary);
-    color: white;
+    color: var(--color-bg-light);
     padding: 4px 12px;
     border-radius: 12px;
     font-weight: 600;

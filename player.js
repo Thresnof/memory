@@ -11,6 +11,7 @@ const playerInfo = document.getElementById('player-info');
 const displayName = document.getElementById('display-name');
 const displayScore = document.getElementById('display-score');
 const finalScoreDisplay = document.getElementById('final-score');
+const showScoreToggle = document.getElementById('show-score-toggle');
 const memoryGrid = document.getElementById('memory-grid');
 const timeDisplay = document.getElementById('time-display');
 const hintBtn = document.getElementById('hint-btn');
@@ -174,7 +175,8 @@ function checkMatch() {
 function addPoints(pts) {
     score += pts;
     displayScore.innerText = score;
-    socket.emit('update_score', { code: sessionCode, score: score });
+    const hideScore = showScoreToggle ? !showScoreToggle.checked : false;
+    socket.emit('update_score', { code: sessionCode, score: score, hideScore: hideScore });
 }
 function resetBoard() {
     flippedCards = [];
@@ -233,5 +235,11 @@ if (themeToggle) {
         } else {
             localStorage.setItem('theme', 'light');
         }
+    });
+}
+
+if (showScoreToggle) {
+    showScoreToggle.addEventListener('change', () => {
+        socket.emit('update_score', { code: sessionCode, score: score, hideScore: !showScoreToggle.checked });
     });
 }

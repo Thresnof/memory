@@ -43,14 +43,16 @@ io.on('connection', (socket) => {
         }
     });
     socket.on('update_score', (data) => {
-        const { code, score } = data;
+        const { code, score, hideScore } = data;
         if (rooms[code]) {
             if (rooms[code].players[socket.id]) {
                 rooms[code].players[socket.id].score = score;
+                rooms[code].players[socket.id].hideScore = hideScore;
             }
             io.to(rooms[code].hostId).emit('player_score', {
                 playerId: socket.id,
-                score: score
+                score: score,
+                hideScore: hideScore
             });
         }
     });

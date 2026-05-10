@@ -230,6 +230,8 @@ function initHost() {
     socket.on('player_score', (data) => {
         if (players[data.playerId]) {
             players[data.playerId].score = data.score;
+            players[data.playerId].hideScore = data.hideScore;
+            players[data.playerId].lastScoreTime = Date.now();
             updateRankingUI();
         }
     });
@@ -295,7 +297,12 @@ endGameBtn.addEventListener('click', () => {
 });
 function updateRankingUI() {
     rankingList.innerHTML = '';
-    const sortedPlayers = Object.values(players).sort((a, b) => b.score - a.score);
+    const sortedPlayers = Object.values(players).sort((a, b) => {
+        if (b.score !== a.score) {
+            return b.score - a.score;
+        }
+        return (b.lastScoreTime || 0) - (a.lastScoreTime || 0);
+    });
     sortedPlayers.forEach((player, index) => {
         const li = document.createElement('li');
         li.className = `player-item ${index === 0 && player.score > 0 ? 'leader' : ''}`;
@@ -304,7 +311,12 @@ function updateRankingUI() {
         if (player.finished) nameSpan.innerText += ' (Koniec)';
         const scoreSpan = document.createElement('span');
         scoreSpan.className = 'score';
-        scoreSpan.innerText = `${player.score} pkt`;
+        if (player.hideScore) {
+            scoreSpan.innerText = '???';
+            scoreSpan.style.opacity = '0.5';
+        } else {
+            scoreSpan.innerText = `${player.score} pkt`;
+        }
         li.appendChild(nameSpan);
         rankingList.appendChild(li);
     });
