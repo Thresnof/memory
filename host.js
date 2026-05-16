@@ -3,7 +3,11 @@ let ytPlayer;
 let isYtReady = false;
 let fadeInterval;
 let isGameEnded = false;
-
+let gameEndConditionType = 'infinite';
+let gameEndConditionValue = 10;
+let timeConditionTimer;
+let gameSecondsElapsed = 0;
+let isEndingSequence = false;
 const volumeSlider = document.getElementById('volume-slider');
 const volumeIcon = document.getElementById('volume-icon');
 
@@ -94,6 +98,18 @@ const endGameBtn = document.getElementById('end-game-btn');
 const lobbyScreen = document.getElementById('lobby-screen');
 const rankingScreen = document.getElementById('ranking-screen');
 const rankingList = document.getElementById('ranking-list');
+const endConditionSelect = document.getElementById('end-condition');
+const endConditionValueInput = document.getElementById('end-condition-value');
+
+if (endConditionSelect) {
+    endConditionSelect.addEventListener('change', (e) => {
+        if (e.target.value === 'infinite') {
+            endConditionValueInput.style.display = 'none';
+        } else {
+            endConditionValueInput.style.display = 'block';
+        }
+    });
+}
 const dbItems = [
     { id: 1, name: 'Abstract Data Type', desc: 'Struktura danych ukrywająca szczegóły implementacji.', img: 'https://media.geeksforgeeks.org/wp-content/uploads/20260123110644215426/application_program-1.webp' },
     { id: 2, name: 'Abstraction', desc: 'Ogólny plan pomijający detale.', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Data_abstraction_levels.png/250px-Data_abstraction_levels.png' },
@@ -215,6 +231,14 @@ function initHost() {
     if (qrContainer) {
         qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(fullLink)}" alt="QR Code" style="border-radius: 8px; border: 4px solid white;">`;
     }
+    const rankingQrContainer = document.getElementById('ranking-qr-container');
+    const rankingSessionCode = document.getElementById('ranking-session-code');
+    if (rankingQrContainer) {
+        rankingQrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(fullLink)}" alt="QR Code" style="border-radius: 8px; border: 2px solid white;">`;
+    }
+    if (rankingSessionCode) {
+        rankingSessionCode.innerText = sessionCode;
+    }
     copyBtn.onclick = () => {
         navigator.clipboard.writeText(fullLink);
         copyBtn.innerText = 'Skopiowano!';
@@ -224,8 +248,14 @@ function initHost() {
         socket.emit('create_room', { code: sessionCode });
     });
     socket.on('player_joined', (data) => {
-        players[data.playerId] = { name: data.name, score: 0, finished: false };
-        updateLobbyUI();
+        players[data.playerId] = { name: data.name, score: 0, boardsCompleted: 0, finished: false };
+        if (rankingScreen.classList.contains('active') && !isEndingSequence && !isGameEnded) {
+            const board = generateBoard(8);
+            socket.emit('send_board', { code: sessionCode, targetPlayerId: data.playerId, board: board });
+        } else {
+            updateLobbyUI();
+        }
+        updateRankingUI();
     });
     socket.on('player_score', (data) => {
         if (players[data.playerId]) {
@@ -233,11 +263,19 @@ function initHost() {
             players[data.playerId].hideScore = data.hideScore;
             players[data.playerId].lastScoreTime = Date.now();
             updateRankingUI();
+            checkGameEndConditions();
         }
     });
     socket.on('player_finished_board', (data) => {
-        const newBoard = generateBoard(8);
-        socket.emit('send_board', { code: sessionCode, targetPlayerId: data.playerId, board: newBoard });
+        if (players[data.playerId]) {
+            players[data.playerId].boardsCompleted = (players[data.playerId].boardsCompleted || 0) + 1;
+        }
+        updateRankingUI();
+        checkGameEndConditions();
+        if (!isEndingSequence && !isGameEnded) {
+            const newBoard = generateBoard(8);
+            socket.emit('send_board', { code: sessionCode, targetPlayerId: data.playerId, board: newBoard });
+        }
     });
     socket.on('player_left', (data) => {
         if (!isGameEnded) {
@@ -285,6 +323,10 @@ function generateBoard(numPairs) {
     return shuffleArray(selectedCards);
 }
 startGameBtn.addEventListener('click', () => {
+    if (endConditionSelect) {
+        gameEndConditionType = endConditionSelect.value;
+        gameEndConditionValue = parseInt(endConditionValueInput.value) || 1;
+    }
     lobbyScreen.classList.remove('active');
     rankingScreen.classList.add('active');
     fadeMusicIn();
@@ -293,18 +335,110 @@ startGameBtn.addEventListener('click', () => {
         socket.emit('send_board', { code: sessionCode, targetPlayerId: playerId, board: board });
     });
     updateRankingUI();
+    
+    if (gameEndConditionType === 'time') {
+        gameSecondsElapsed = 0;
+        timeConditionTimer = setInterval(() => {
+            gameSecondsElapsed++;
+            if (gameSecondsElapsed >= gameEndConditionValue * 60) {
+                checkGameEndConditions(true);
+            }
+        }, 1000);
+    }
 });
 endGameBtn.addEventListener('click', () => {
     if (confirm("Czy na pewno chcesz zakończyć grę dla wszystkich?")) {
-        isGameEnded = true;
-        fadeMusicOut();
-        socket.emit('end_game_for_all', { code: sessionCode });
-        endGameBtn.disabled = true;
-        endGameBtn.innerText = "Zakończono!";
-        Object.values(players).forEach(p => p.finished = true);
-        updateRankingUI();
+        startEndGameCountdown();
     }
 });
+
+function checkGameEndConditions(isTimeUp = false) {
+    if (isEndingSequence || isGameEnded || gameEndConditionType === 'infinite') return;
+    
+    let conditionMet = false;
+    
+    if (isTimeUp) {
+        conditionMet = true;
+    } else if (gameEndConditionType === 'points') {
+        conditionMet = Object.values(players).some(p => p.score >= gameEndConditionValue);
+    } else if (gameEndConditionType === 'boards') {
+        conditionMet = Object.values(players).some(p => (p.boardsCompleted || 0) >= gameEndConditionValue);
+    }
+    
+    if (conditionMet) {
+        startEndGameCountdown();
+    }
+}
+
+function startEndGameCountdown() {
+    if (isEndingSequence) return;
+    isEndingSequence = true;
+    isGameEnded = true;
+    
+    if (timeConditionTimer) clearInterval(timeConditionTimer);
+    
+    socket.emit('end_game_for_all', { code: sessionCode });
+    fadeMusicOut();
+    endGameBtn.disabled = true;
+    endGameBtn.innerText = "Zakończono!";
+    Object.values(players).forEach(p => p.finished = true);
+    updateRankingUI();
+    
+    const overlay = document.getElementById('countdown-overlay');
+    const timerDisplay = document.getElementById('countdown-timer');
+    if (overlay && timerDisplay) {
+        overlay.style.display = 'flex';
+        let timeLeft = 5;
+        timerDisplay.innerText = timeLeft;
+        
+        const countdownInterval = setInterval(() => {
+            timeLeft--;
+            if (timeLeft > 0) {
+                timerDisplay.innerText = timeLeft;
+            } else {
+                clearInterval(countdownInterval);
+                overlay.style.display = 'none';
+                showFinalResults();
+            }
+        }, 1000);
+    } else {
+        showFinalResults();
+    }
+}
+
+function showFinalResults() {
+    rankingScreen.classList.remove('active');
+    document.getElementById('final-results-screen').classList.add('active');
+    
+    const finalResultsList = document.getElementById('final-results-list');
+    if (!finalResultsList) return;
+    finalResultsList.innerHTML = '';
+    
+    const sortedPlayers = Object.values(players).sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        return (b.lastScoreTime || 0) - (a.lastScoreTime || 0);
+    });
+    
+    sortedPlayers.forEach((player, index) => {
+        const li = document.createElement('li');
+        li.className = 'player-item';
+        
+        if (index === 0 && player.score > 0) li.classList.add('gold-medal');
+        else if (index === 1 && player.score > 0) li.classList.add('silver-medal');
+        else if (index === 2 && player.score > 0) li.classList.add('bronze-medal');
+        
+        const nameSpan = document.createElement('span');
+        nameSpan.innerText = `${index + 1}. ${player.name}`;
+        
+        const scoreSpan = document.createElement('span');
+        scoreSpan.className = 'score';
+        scoreSpan.innerText = `${player.score} pkt | ${player.boardsCompleted || 0} plansz`;
+        
+        li.appendChild(nameSpan);
+        li.appendChild(scoreSpan);
+        finalResultsList.appendChild(li);
+    });
+}
 function updateRankingUI() {
     rankingList.innerHTML = '';
     const sortedPlayers = Object.values(players).sort((a, b) => {
@@ -325,7 +459,7 @@ function updateRankingUI() {
             scoreSpan.innerText = '???';
             scoreSpan.style.opacity = '0.5';
         } else {
-            scoreSpan.innerText = `${player.score} pkt`;
+            scoreSpan.innerText = `${player.score} pkt | ${player.boardsCompleted || 0} plansz`;
         }
         li.appendChild(nameSpan);
         li.appendChild(scoreSpan);

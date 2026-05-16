@@ -46,9 +46,21 @@
                     <ul id="players-list" class="players-list">
                     </ul>
                 </div>
+                <div class="settings-section" style="margin-top: 15px; background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);">
+                    <h3 style="margin-top: 0; margin-bottom: 10px; font-size: 1.1rem;">Zakończenie gry:</h3>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <select id="end-condition" style="padding: 8px; border-radius: 5px; border: 1px solid rgba(255, 255, 255, 0.2); background: var(--bg-card); color: var(--text-color); font-family: inherit;">
+                            <option value="infinite">Nieskończoność</option>
+                            <option value="points">Gdy gracz zdobędzie X punktów</option>
+                            <option value="boards">Gdy gracz ukończy X plansz</option>
+                            <option value="time">Po upływie X minut</option>
+                        </select>
+                        <input type="number" id="end-condition-value" min="1" value="10" style="padding: 8px; width: 80px; border-radius: 5px; border: 1px solid rgba(255, 255, 255, 0.2); background: var(--bg-card); color: var(--text-color); display: none; font-family: inherit;">
+                    </div>
+                </div>
                 <button id="start-game-btn" class="primary-btn" disabled>Rozpocznij Grę</button>
             </div>
-            <div id="ranking-screen" class="screen">
+            <div id="ranking-screen" class="screen" style="position: relative;">
                 <div class="ranking-header">
                     <h2>Ranking na żywo</h2>
                     <div id="volume-control" class="volume-control">
@@ -56,9 +68,27 @@
                         <input type="range" id="volume-slider" min="0" max="100" value="100" title="Głośność muzyki">
                     </div>
                 </div>
+                <div class="late-join-info" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 20px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);">
+                    <div id="ranking-qr-container"></div>
+                    <div>
+                        <p style="margin: 0; font-size: 0.9em; color: var(--color-secondary);">Kod sesji dołączenia:</p>
+                        <strong id="ranking-session-code" style="font-size: 1.4em; letter-spacing: 2px; color: var(--color-primary);">...</strong>
+                    </div>
+                </div>
                 <ul id="ranking-list" class="ranking-list">
                 </ul>
-                <button id="end-game-btn" class="primary-btn" style="margin-top: 20px; background-color: var(--color-error);">Zakończ Grę dla wszystkich</button>
+                <button id="end-game-btn" class="primary-btn" style="margin-top: 20px; background-color: var(--color-error);">Zakończ Ręcznie</button>
+                
+                <div id="countdown-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; flex-direction: column; border-radius: inherit;">
+                    <h2 style="font-size: 2.5rem; color: white; margin-bottom: 10px;">Koniec gry za:</h2>
+                    <div id="countdown-timer" style="font-size: 7rem; font-weight: bold; color: var(--color-primary); text-shadow: 0 0 20px var(--color-primary); line-height: 1;">5</div>
+                </div>
+            </div>
+            <div id="final-results-screen" class="screen">
+                <h2 style="text-align: center; margin-bottom: 20px; font-size: 2.2rem; color: var(--color-primary);">Ostateczne Wyniki</h2>
+                <ul id="final-results-list" class="ranking-list">
+                </ul>
+                <button id="new-game-btn" class="primary-btn" style="margin-top: 20px;" onclick="window.location.reload()">Nowa Gra</button>
             </div>
         </main>
     </div>

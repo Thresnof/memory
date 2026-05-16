@@ -508,3 +508,35 @@ body.dark-mode .theme-toggle .moon {
     transform: translateY(0) rotate(0deg);
     opacity: 1;
 }
+
+/* Medals for Final Results */
+.gold-medal {
+    border-color: #ffd700 !important;
+    background: rgba(255, 215, 0, 0.1) !important;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    color: #ffd700;
+}
+.gold-medal .score {
+    background: #ffd700 !important;
+    color: #000 !important;
+}
+
+.silver-medal {
+    border-color: #c0c0c0 !important;
+    background: rgba(192, 192, 192, 0.1) !important;
+    color: #c0c0c0;
+}
+.silver-medal .score {
+    background: #c0c0c0 !important;
+    color: #000 !important;
+}
+
+.bronze-medal {
+    border-color: #cd7f32 !important;
+    background: rgba(205, 127, 50, 0.1) !important;
+    color: #cd7f32;
+}
+.bronze-medal .score {
+    background: #cd7f32 !important;
+    color: #fff !important;
+}
